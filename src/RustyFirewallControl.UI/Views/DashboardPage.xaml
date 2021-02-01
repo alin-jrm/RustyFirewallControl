@@ -1,0 +1,174 @@
+﻿<UserControl
+    x:Class="RustyFirewallControl.UI.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="clr-namespace:RustyFirewallControl.UI.ViewModels"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    FontSize="16">
+    <UserControl.Resources>
+        <vm:DashboardPageViewModel
+            x:Key="ViewModel" />
+        <Style
+            x:Key="firewallState"
+            TargetType="Border">
+            <Setter
+                Property="Background"
+                Value="Green" />
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Profile}"
+                    Value="NoFiltering">
+                    <Setter
+                        Property="Background"
+                        Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style
+            x:Key="outbound"
+            TargetType="Border">
+            <Setter
+                Property="Background"
+                Value="Green" />
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Profile}"
+                    Value="NoFiltering">
+                    <Setter
+                        Property="Background"
+                        Value="Red" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Profile}"
+                    Value="LowFiltering">
+                    <Setter
+                        Property="Background"
+                        Value="DarkOrange" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid
+        DataContext="{StaticResource ViewModel}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="Auto" />
+            <ColumnDefinition
+                Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Column="1"
+            Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="250" />
+                <ColumnDefinition
+                    Width="150" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="150" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="10" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="10" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="10" />
+                <RowDefinition
+                    Height="Auto" />
+            </Grid.RowDefinitions>
+            <Path
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Top"
+                Width="64"
+                Height="82"
+                Stretch="Fill"
+                Style="{StaticResource Shield}" />
+            <Label
+                Grid.Row="1">
+                <TextBlock
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center">Windows Firewall state</TextBlock>
+            </Label>
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Padding="10,5"
+                Style="{StaticResource firewallState}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding IsFirewallEnabled}" />
+            </Border>
+            <Label
+                Grid.Row="3">
+                <TextBlock
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center">Inbound connections</TextBlock>
+            </Label>
+            <Border
+                Grid.Row="3"
+                Grid.Column="1"
+                Padding="10,5"
+                Style="{StaticResource firewallState}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding InboundAction}" />
+            </Border>
+            <Label
+                Grid.Row="5">
+                <TextBlock
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center">Outbound connections</TextBlock>
+            </Label>
+            <Border
+                Grid.Row="5"
+                Grid.Column="1"
+                Padding="10,5"
+                Style="{StaticResource outbound}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding OutboundAction}" />
+            </Border>
+            <Label
+                Grid.Row="7">
+                <TextBlock
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center">Connected to location</TextBlock>
+            </Label>
+            <Border
+                Grid.Row="7"
+                Grid.Column="1"
+                Padding="10,5"
+                Style="{StaticResource firewallState}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding Location}" />
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

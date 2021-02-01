@@ -1,0 +1,82 @@
+﻿<Window
+    x:Class="RustyFirewallControl.UI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:RustyFirewallControl.UI.Views"
+    xmlns:vm="clr-namespace:RustyFirewallControl.UI.ViewModels"
+    mc:Ignorable="d"
+    Title="Rusty Firewall Control"
+    Width="1024"
+    Height="600"
+    MinWidth="800"
+    MinHeight="480"
+    FontSize="12"
+    Closing="WindowClosing"
+    WindowStartupLocation="CenterScreen"
+    SnapsToDevicePixels="True"
+    Icon="/Resources/rusty.ico">
+    <Window.Resources>
+        <vm:MainWindowViewModel
+            x:Key="ViewModel" />
+    </Window.Resources>
+    <DockPanel
+        x:Name="content"
+        Background="White"
+        DataContext="{StaticResource ViewModel}">
+        <DockPanel.Resources>
+            <DataTemplate
+                DataType="{x:Type vm:DashboardPageViewModel}">
+                <views:DashboardPage
+                    FirewallStatus="{Binding DataContext.FirewallStatus, ElementName=content}" />
+            </DataTemplate>
+            <DataTemplate
+                DataType="{x:Type vm:ProfilesPageViewModel}">
+                <views:ProfilesPage
+                    Profile="{Binding DataContext.FilteringProfile, ElementName=content}" 
+                    ProfileChanged="ProfilesPageProfileChanged"/>
+            </DataTemplate>
+            <DataTemplate
+                DataType="{x:Type vm:OptionsPageViewModel}">
+                <views:OptionsPage />
+            </DataTemplate>
+        </DockPanel.Resources>
+        <Grid
+            DockPanel.Dock="Left"
+            Background="#e6e6e6"
+            Width="200"
+            Margin="0">
+            <ListBox
+                Margin="0 10 0 0"
+                BorderThickness="0"
+                DockPanel.Dock="Left"
+                Background="#e6e6e6"
+                ItemsSource="{Binding Pages}"
+                SelectedItem="{Binding SelectedPage}">
+                <ListBox.Resources>
+                </ListBox.Resources>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal"
+                            Margin="10">
+                            <Path
+                                Stroke="Black"
+                                Style="{StaticResource PageIcon}" />
+                            <TextBlock
+                                Margin="10 0 5 0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Title}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <ContentControl
+            IsTabStop="False"
+            Content="{Binding SelectedPage}" />
+        <!--<views:DashboardPage FirewallStatus="{Binding FirewallStatus}" />-->
+    </DockPanel>
+</Window>
+

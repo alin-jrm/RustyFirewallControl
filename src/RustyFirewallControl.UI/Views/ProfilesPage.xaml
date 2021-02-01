@@ -1,0 +1,160 @@
+﻿<UserControl
+    x:Class="RustyFirewallControl.UI.Views.ProfilesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:RustyFirewallControl.UI.Views"
+    xmlns:c="clr-namespace:RustyFirewallControl.UI.Converters"
+    xmlns:cmn="clr-namespace:RustyFirewallControl.Common"
+    xmlns:vm="clr-namespace:RustyFirewallControl.UI.ViewModels"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="600">
+    <UserControl.Resources>
+        <vm:ProfilesPageViewModel
+            x:Key="ViewModel" />
+        <c:ProfileToBoolConverter
+            x:Key="profileConverter" />
+        <Style
+            TargetType="{x:Type TextBlock}"
+            x:Key="Description">
+            <Setter
+                Property="Margin"
+                Value="20,0,0,0" />
+            <Setter
+                Property="TextWrapping"
+                Value="WrapWithOverflow" />
+        </Style>
+        <Style
+            x:Key="MyFocusVisual">
+            <Setter
+                Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle
+                            Margin="-7"
+                            StrokeThickness="2"
+                            Stroke="Black" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style
+            TargetType="{x:Type RadioButton}">
+            <Setter
+                Property="FontWeight"
+                Value="DemiBold" />
+            <Setter
+                Property="Margin"
+                Value="0,18,0,7" />
+            <Setter
+                Property="FocusVisualStyle"
+                Value="{StaticResource MyFocusVisual}" />
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Source={x:Static sys:Boolean.TrueString}}"
+                    Value="True">
+                    <Setter
+                        Property="FocusVisualStyle"
+                        Value="{StaticResource MyFocusVisual}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel
+        Margin="20,10"
+        Orientation="Vertical"
+        DataContext="{StaticResource ViewModel}">
+        <DockPanel>
+            <Path
+                DockPanel.Dock="Left"
+                Stroke="Black"
+                Style="{StaticResource PageIcon}"
+                Height="32"
+                Width="32"
+                Margin="0,0,14,0" />
+            <TextBlock
+                DockPanel.Dock="Left"
+                VerticalAlignment="Center"
+                TextWrapping="Wrap"
+                FontWeight="DemiBold">
+                Filtering level specifies which connections should be blocked
+                and which connections should be allowed
+            </TextBlock>
+        </DockPanel>
+        <StackPanel
+            Margin="0,21,0,0">
+            <RadioButton
+                Command="{Binding ProfileSelected}"
+                IsChecked="{Binding Profile, Converter={StaticResource profileConverter}, ConverterParameter=high}">_High Filtering</RadioButton>
+            <TextBlock
+                Style="{StaticResource Description}">All outbound and inbound connections are blocked. This profile blocks all attempts to connect to and from your computer.</TextBlock>
+            <RadioButton
+                Command="{Binding ProfileSelected}"
+                IsChecked="{Binding Profile, Converter={StaticResource profileConverter}, ConverterParameter=medium}">_Medium Filtering (recommended)</RadioButton>
+            <TextBlock
+                Style="{StaticResource Description}">Outbound connections that do not match a rule are blocked. Only the programs with an allowe rule are allowed.</TextBlock>
+            <RadioButton
+                Command="{Binding ProfileSelected}"
+                IsChecked="{Binding Profile, Converter={StaticResource profileConverter}, ConverterParameter=low}">_Low Filtering</RadioButton>
+            <TextBlock
+                Style="{StaticResource Description}">Outbound connections that do not match a rule are allowed. Only the programs with a block rule are blocked.</TextBlock>
+            <RadioButton
+                Command="{Binding ProfileSelected}"
+                IsChecked="{Binding Profile, Converter={StaticResource profileConverter}, ConverterParameter=none}">_No Filtering</RadioButton>
+            <TextBlock
+                Style="{StaticResource Description}">Windows Firewall is turned off. Avoid using this setting ulnelss you have another firewall running.</TextBlock>
+        </StackPanel>
+        <DockPanel
+            Margin="0,40,0,0">
+            <Path
+                DockPanel.Dock="Left"
+                Stroke="Black"
+                Style="{StaticResource Schedule}"
+                Stretch="Fill"
+                Height="32"
+                Width="32"
+                Margin="0,0,14,0" />
+            <TextBlock
+                DockPanel.Dock="Left"
+                VerticalAlignment="Center"
+                TextWrapping="Wrap"
+                FontWeight="DemiBold">
+                Specify the profile that will be reverted in case it is
+                switched to a lower filtering profile for installing/updating purposes</TextBlock>
+        </DockPanel>
+        <StackPanel
+            Margin="0,15,0,0"
+            Orientation="Horizontal">
+            <CheckBox
+                x:Name="automaticallySetFiltering"
+                VerticalAlignment="Center">_Automatically set</CheckBox>
+            <ComboBox
+                VerticalAlignment="Center"
+                Width="150"
+                Margin="10,0"
+                SelectedIndex="0"
+                ToolTip="This is the filtering level that will be set after the specified time has passed"
+                ToolTipService.ShowOnDisabled="True"
+                IsEnabled="{Binding ElementName=automaticallySetFiltering, Path=IsChecked}">
+                <ComboBoxItem>Medium Filtering</ComboBoxItem>
+                <ComboBoxItem>High Filtering</ComboBoxItem>
+            </ComboBox>
+            <Label
+                VerticalAlignment="Center"
+                Target="{Binding ElementName=minutes}">a_fter</Label>
+            <TextBox
+                Name="minutes"
+                Width="30"
+                Margin="10,0"
+                IsEnabled="{Binding ElementName=automaticallySetFiltering, Path=IsChecked}"
+                VerticalAlignment="Center"
+                Height="23"
+                TextAlignment="Center">1</TextBox>
+            <TextBlock
+                VerticalAlignment="Center">minutes</TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
